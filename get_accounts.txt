@@ -1,0 +1,23 @@
+Binance Balance Checker
+
+- Lists all coins owned for each exchange starting with bin1
+- Requires ENTER to move to next exchange
+- Lists balances like so
+Ticker  | Amount  | BTC value
+NEO     | 5       | 0.0056
+BTC     | 0.01    | 0.01
+
+Total BTC value: 0.0156
+Total USD value: ???
+- Asks BTCUSD price at start to calculate USD value
+
+Important Python Binance commands:
+(Can be found on python-binance github binance/client/)
+client = Client(api, secret)
+data = client.get_all_tickers()
+  - Get all most recent prices
+data = client.get_symbol_info(symbol)
+  - Get information about a specific pair
+data = client.get_account()
+  - Gets account information
+  - data['balances'] gives balances
