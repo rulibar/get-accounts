@@ -1,3 +1,17 @@
+"""
+Get Accounts
+get_accounts.py v1.1.2 (22-2-19)
+Get holdings from Binance and sort by BTC value.
+
+v1.1.1 (19-7-20)
+- Initial working version
+
+v1.1.2 (22-2-19)
+- Sort entries by BTC value
+- Update formatting
+
+"""
+
 from binance.client import Client
 
 class Keypair:
@@ -7,11 +21,11 @@ class Keypair:
 
 exchanges = dict()
 exchanges["bin1"] = Keypair(
-    "api key",
-    "secret")
+    "api_key",
+    "api_secret")
 #exchanges["bin2"] = Keypair(
-#    "api key",
-#    "secret")
+#    "api_key",
+#    "api_secret")
 
 print("Binance Balance Checker")
 BTCUSD = float(input("BTC USD price: "))
@@ -20,7 +34,7 @@ for e in exchanges:
     # cycle through exchanges
     print("Name: " + e)
     ex = exchanges[e]
-    client = Client(ex.api, ex.secret)
+    client = Client(ex.api, ex.secret, tld='us')
     # get current prices
     data = client.get_all_tickers()
     prices = dict()
@@ -47,13 +61,16 @@ for e in exchanges:
         if value != 0: fol[asset] = {'amt':total, 'btc_value':value}
     # output portfolio info in desired format
     total_btc_value = 0
+    balances_str = list()
     for asset in fol:
         amt = fol[asset]['amt']
         btc_value = fol[asset]['btc_value']
         total_btc_value += btc_value
-        print("{}\t| {}\t\t| {}".format(asset, amt, btc_value))
+        balances_str.append([str(asset), "{:.8f}".format(amt)[:10], "{:.8f}".format(btc_value)[:10]])
+    balances_str.sort(key=lambda x:float(x[2]), reverse=True)
+    balances_str = ["\t| ".join(line) for line in balances_str]
+    balances_str = "\n".join(balances_str)
+    print(balances_str)
     print("Total BTC value: " + str(total_btc_value))
     print("Total USD value: " + str(total_btc_value * BTCUSD))
-    # pause, empty line
     input("Press ENTER to continue: ")
-    print("")
