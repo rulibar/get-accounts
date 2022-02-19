@@ -1,3 +1,4 @@
+19-7-20
 Binance Balance Checker
 
 - Lists all coins owned for each exchange starting with bin1
